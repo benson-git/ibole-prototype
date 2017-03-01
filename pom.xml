@@ -23,6 +23,10 @@
 	</organization>
 	<modules>
 		<module>prototype-common</module>
+		<module>prototype-client-web</module>
+		<module>prototype-business-edge</module>
+		<module>prototype-business-application</module>
+		<module>prototype-business-domain</module>
 	</modules>
 	<properties>
 		<!-- Log lib version args -->
