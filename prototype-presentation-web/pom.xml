@@ -5,7 +5,7 @@
     <artifactId>prototype-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>prototype-client-web</artifactId>
+  <artifactId>prototype-presentation-web</artifactId>
   <name>${project.artifactId}</name>
   <packaging>war</packaging>
 </project>
