@@ -10,7 +10,7 @@ Prototype在领域模型的划分和设计上采用领域驱动设计([DDD](http
 
 - prototype-business-domain
 
-       负责表示业务概念、业务状况的信息以及业务规则。尽管保存这些内容的技术细节由基础结构层来完成，反映业务状况的状态在该层中被控制和使用。这一层是业务软件的核心。该层对应DDD中的领域层。
+       负责表示业务概念、业务状况的信息以及业务规则。尽管保存这些内容的技术细节由基础结构层来完成，反映业务状况的状态在该层中被控制和使用。这一层是业务软件的核心。该层对应DDD中的领域模型层。
 
 - prototype-business-application
 
@@ -31,6 +31,9 @@ Prototype在领域模型的划分和设计上采用领域驱动设计([DDD](http
 - [ibole-infrastructure](https://github.com/benson-git/ibole-infrastructure)和[ibole-microservice](https://github.com/benson-git/ibole-microservice)
      
        为Prototype提供基础支撑平台和微服务化框架。对应DDD中的基础结构层。
+
+
+![Prototype逻辑分层图](https://github.com/benson-git/wiki-docs/blob/master/images/prototype%20logic%20layer.asta.png)
 
 ---
 
