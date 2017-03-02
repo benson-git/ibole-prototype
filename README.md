@@ -32,7 +32,7 @@ Prototype在领域模型的划分和设计上采用领域驱动设计([DDD](http
      
        为Prototype提供基础支撑平台和微服务化框架。对应DDD中的基础结构层。
 
-
+###Prototype逻辑分层图
 ![Prototype逻辑分层图](https://github.com/benson-git/wiki-docs/blob/master/images/prototype%20logic%20layer.asta.png)
 
 ---
