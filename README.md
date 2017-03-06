@@ -38,6 +38,23 @@ Prototype在领域模型的划分和设计上采用领域驱动设计([DDD](http
 ![Prototype逻辑分层图](https://github.com/benson-git/wiki-docs/blob/master/images/prototype%20logic%20layer.asta.png)
 
 ---
+###prototype-business-domain领域模型
+
+- 聚合（Aggregate）
+
+
+- 领域事件（Domain Event）
+
+       领域事件由聚合发布
+
+- 资源库（Repository）
+
+       聚合实例通过资源库进行持久化，另外，对聚合的查找和获取也是通过资源库完成。
+
+- 领域服务（Domain Service）
+   
+       在领域模型中，有些业务操作并不能自然地放到 实体或值对象上，此时我们可以使用无状态的领域服务。领域服务执行特定于领域的操作，其中可能涉及到多个领域对象。涉及到跨聚合的操作，通常也是使用领域服务来执行。
+
 
 http://www.infoq.com/cn/articles/implementation-road-of-domain-driven-design/
 
