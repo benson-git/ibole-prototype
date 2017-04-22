@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:microservices="http://github.com/ibole/schema/blob/master/microservices"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+		http://github.com/ibole/schema/blob/master/microservices http://github.com/ibole/schema/blob/master/microservices/microservices.xsd">
+    
+    <description>Spring MVC Configuration</description>
+
+    <bean id="rpcClientListener" class="com.github.ibole.microservice.config.spring.RpcClientListenerBean">
+      <property name="serverHostOverride" value="localhost"/>
+    </bean>
+   
+    <microservices:annotation package="com.github.ibole.prototype.presentation.web.controller" /> 
+    <microservices:registry id= "zookeeper" rootPath="/ibole/rpc/myapplication" address="localhost:2181" preferredZone="myzone" usedTls="true" timeout="1000"/>
+
+	<context:component-scan base-package="com.github.ibole.prototype.presentation.web.controller" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+    
+	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
+		<mvc:message-converters register-defaults="true">
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+		    	<constructor-arg value="UTF-8" />
+			</bean>
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="supportedMediaTypes">
+                	<list><value>application/json;charset=UTF-8</value></list>
+                </property>
+                <property name="prettyPrint" value="false"/>
+                <property name="objectMapper">  
+                    <bean class="com.github.ibole.infrastructure.common.mapper.JsonMapper"></bean>  
+                </property> 
+            </bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+	    <property name="mediaTypes" >
+	        <map> 
+                <entry key="xml" value="application/xml"/> 
+                <entry key="json" value="application/json"/> 
+            </map>
+	    </property>
+        <property name="ignoreAcceptHeader" value="true"/>
+        <property name="favorPathExtension" value="true"/>
+	</bean>
+
+</beans>
