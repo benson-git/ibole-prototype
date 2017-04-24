@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.ibole.prototype.presentation.web.controller.test;
+package com.github.ibole.prototype.presentation.web.controller;
 
 import com.github.ibole.infrastructure.web.spring.GlobalBindingHandler;
 
