@@ -15,10 +15,10 @@
 			<groupId>com.github.ibole</groupId>
 			<artifactId>microservice-all</artifactId>
 			<exclusions>
-			   <exclusion>
-			       <groupId>com.github.ibole</groupId>
-                   <artifactId>microservice-remoting</artifactId>
-			   </exclusion>		   
+				<exclusion>
+					<groupId>com.github.ibole</groupId>
+					<artifactId>microservice-remoting</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -68,6 +68,15 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-jaxb-annotations</artifactId>
+		</dependency>
+		<!-- swagger libs -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
 		</dependency>
 		<!-- Log libs -->
 		<dependency>
