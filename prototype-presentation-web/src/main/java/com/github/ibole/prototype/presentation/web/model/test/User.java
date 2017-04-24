@@ -14,16 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.ibole.prototype.presentation.web.controller.test;
+package com.github.ibole.prototype.presentation.web.model.test;
 
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import javax.validation.constraints.NotNull;
 
 /*********************************************************************************************.
  * 
@@ -33,22 +26,55 @@ import javax.servlet.http.HttpServletResponse;
  * <p></p>
  *********************************************************************************************/
 
-  
+
 /**
  * @author bwang
  *
  */
-@Controller
-@Component("greeterAction")
-public class GreeterClientController{
-  
-  @RequestMapping("/greet")
-  @ResponseBody
-  public String greet(HttpServletRequest req, HttpServletResponse res){
-    String str = "Hello";
-    if (str.equals("Hello")) {
-      throw new NullPointerException("Custom Null point!");
-    }
-    return str;
+public class User {
+
+  @NotNull(message="{id.not.empty}") 
+  private Long id;
+  @NotNull(message="{username.not.empty}") 
+  private String userName;
+
+  public User() {}
+  /**
+   * @param i
+   * @param string
+   */
+  public User(Long id, String userName) {
+    this.id = id;
+    this.userName = userName;
   }
+
+  /**
+   * @return the id
+   */
+  public Long getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  /**
+   * @return the userName
+   */
+  public String getUserName() {
+    return userName;
+  }
+
+  /**
+   * @param userName the userName to set
+   */
+  public void setUserName(String userName) {
+    this.userName = userName;
+  }
+  
+  
 }

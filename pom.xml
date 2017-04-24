@@ -35,6 +35,9 @@
         <protobuf_java_version>3.2.0</protobuf_java_version>
         <!-- Spring Framework -->
         <springframework_version>4.2.6.RELEASE</springframework_version>
+        <!-- JSR 303 with Hibernate Validator -->
+        <validation_api_version>1.1.0.Final</validation_api_version>
+        <hibernate_validator_version>5.4.1.Final</hibernate_validator_version>
         <!-- Common libs -->
         <guava_version>19.0</guava_version>
         <slf4j_log4j12_version>1.7.5</slf4j_log4j12_version>
@@ -130,6 +133,17 @@
                 <artifactId>spring-webmvc</artifactId>
                 <version>${springframework_version}</version>
             </dependency>
+	        <!-- JSR 303 with Hibernate Validator -->
+	        <dependency>
+	            <groupId>javax.validation</groupId>
+	            <artifactId>validation-api</artifactId>
+	            <version>${validation_api_version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.hibernate</groupId>
+	            <artifactId>hibernate-validator</artifactId>
+	            <version>${hibernate_validator_version}</version>
+	        </dependency>            
             <!-- Jackson lib -->
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>

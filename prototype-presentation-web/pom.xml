@@ -14,6 +14,12 @@
 		<dependency>
 			<groupId>com.github.ibole</groupId>
 			<artifactId>microservice-all</artifactId>
+			<exclusions>
+			   <exclusion>
+			       <groupId>com.github.ibole</groupId>
+                   <artifactId>microservice-remoting</artifactId>
+			   </exclusion>		   
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.github.ibole</groupId>
@@ -36,6 +42,15 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
+		</dependency>
+		<!-- JSR 303 with Hibernate Validator -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 		<!-- Jackson lib -->
 		<dependency>
