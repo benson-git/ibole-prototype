@@ -45,7 +45,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Restful API 访问路径: 
- * http://IP:port/{context-path}/swagger-ui.html 
+ * http://IP:port/{context-path}/documentation/swagger-ui.html 
  * 
  * @author bwang
  *
