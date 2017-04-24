@@ -74,5 +74,7 @@
     </bean>
     <!-- 自动注册validator -->
     <mvc:annotation-driven validator="validator"/>
+   
+    <bean class="com.github.ibole.prototype.presentation.web.config.RestApiConfig"/>
     
 </beans>
