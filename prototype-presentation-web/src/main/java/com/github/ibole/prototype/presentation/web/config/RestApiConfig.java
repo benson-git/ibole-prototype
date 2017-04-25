@@ -89,10 +89,10 @@ public class RestApiConfig extends WebMvcConfigurerAdapter {
   private ApiInfo apiInfo() {
     Contact contact = new Contact("bwang", "", "");
     return new ApiInfoBuilder()
-        .title("Spring Boot中使用Swagger2构建RESTful APIs")
+        .title("Spring Restful中使用Swagger2构建RESTful APIs")
         .description(
-            "更多Spring Boot相关文章请关注：https://github.com/benson-git/ibole-spring-cloud-example")
-        .termsOfServiceUrl("https://github.com/benson-git/ibole-spring-cloud-example")
+            "更多细节请关注：https://github.com/benson-git/ibole-prototype/tree/master/prototype-presentation-web")
+        .termsOfServiceUrl("https://github.com/benson-git/ibole-prototype/tree/master/prototype-presentation-web")
         .contact(contact).version("1.0").build();
   }
 }
