@@ -39,6 +39,14 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>   
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
@@ -95,6 +103,11 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 		</dependency>
+		<!-- test lib -->
+        <dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-test</artifactId>   
+         </dependency>		
 	</dependencies>
 	<build>
 		<plugins>

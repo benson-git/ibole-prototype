@@ -77,4 +77,6 @@
    
     <bean class="com.github.ibole.prototype.presentation.web.config.RestApiConfig"/>
     
+    <bean class="com.github.ibole.prototype.presentation.web.security.RestWebSecurityConfigurerAdapter"/>
+    
 </beans>

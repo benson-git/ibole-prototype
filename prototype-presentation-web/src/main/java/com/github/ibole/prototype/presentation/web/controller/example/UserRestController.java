@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.ibole.prototype.presentation.web.controller.test;
+package com.github.ibole.prototype.presentation.web.controller.example;
 
-import com.github.ibole.prototype.presentation.web.model.test.User;
+import com.github.ibole.prototype.presentation.web.model.example.User;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

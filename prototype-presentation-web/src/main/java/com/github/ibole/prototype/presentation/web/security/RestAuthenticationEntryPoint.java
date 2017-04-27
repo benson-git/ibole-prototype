@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-package com.github.ibole.prototype.presentation.web.model.test;
+package com.github.ibole.prototype.presentation.web.security;
 
-import javax.validation.constraints.NotNull;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /*********************************************************************************************.
  * 
@@ -31,50 +39,15 @@ import javax.validation.constraints.NotNull;
  * @author bwang
  *
  */
-public class User {
+public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-  @NotNull(message="{id.not.empty}") 
-  private Long id;
-  @NotNull(message="{username.not.empty}") 
-  private String userName;
-
-  public User() {}
-  /**
-   * @param i
-   * @param string
-   */
-  public User(Long id, String userName) {
-    this.id = id;
-    this.userName = userName;
+  @Override
+  public void commence(HttpServletRequest request, HttpServletResponse response,
+      AuthenticationException authException) throws IOException, ServletException {
+      //response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+      response.setStatus(HttpStatus.UNAUTHORIZED.value());
+      response.setHeader(HttpStatus.UNAUTHORIZED.value()+"", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+    
   }
 
-  /**
-   * @return the id
-   */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the userName
-   */
-  public String getUserName() {
-    return userName;
-  }
-
-  /**
-   * @param userName the userName to set
-   */
-  public void setUserName(String userName) {
-    this.userName = userName;
-  }
-  
-  
 }
