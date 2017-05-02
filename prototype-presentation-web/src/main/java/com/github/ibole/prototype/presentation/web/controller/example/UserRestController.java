@@ -62,7 +62,7 @@ import javax.validation.Valid;
  */
 @RestController
 @Component("greeterAction")
-@RequestMapping("/api/v1//users")  
+@RequestMapping("/api/v1/users")  
 public class UserRestController{
   
   private static Map<Long, User> users = Collections.synchronizedMap(new HashMap<Long, User>());  

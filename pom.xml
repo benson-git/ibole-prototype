@@ -137,22 +137,6 @@
                 <artifactId>spring-webmvc</artifactId>
                 <version>${springframework_version}</version>
             </dependency>
-            <!-- Spring Security -->
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-web</artifactId>
-                <version>${spring_security_version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-config</artifactId>
-                <version>${spring_security_version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-aop</artifactId>
-                <version>${springframework_version}</version>
-            </dependency>
 	        <!-- JSR 303 with Hibernate Validator -->
 	        <dependency>
 	            <groupId>javax.validation</groupId>

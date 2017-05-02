@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.ibole.prototype.presentation.web.security;
+package com.github.ibole.prototype.presentation.web.config;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
-
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /*********************************************************************************************.
  * 
@@ -39,15 +31,19 @@ import javax.servlet.http.HttpServletResponse;
  * @author bwang
  *
  */
-public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
   @Override
-  public void commence(HttpServletRequest request, HttpServletResponse response,
-      AuthenticationException authException) throws IOException, ServletException {
-      //response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
-      response.setStatus(HttpStatus.UNAUTHORIZED.value());
-      response.setHeader(HttpStatus.UNAUTHORIZED.value()+"", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-    
+  protected Class<?>[] getRootConfigClasses() {
+         return new Class[] { AppConfig.class };
   }
+  @Override
+  protected Class<?>[] getServletConfigClasses() {
+         return null;
+  }
+  @Override
+  protected String[] getServletMappings() {
+         return new String[]{"/"};
+  } 
 
 }

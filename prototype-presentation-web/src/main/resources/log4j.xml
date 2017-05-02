@@ -31,7 +31,15 @@
   <logger name="io.netty" additivity="false">     
     <level value="INFO" />   
     <appender-ref ref="sysout" />
-  </logger>      
+  </logger> 
+  <logger name="springfox" additivity="false">     
+    <level value="INFO" />   
+    <appender-ref ref="sysout" />
+  </logger>
+  <logger name="org.hibernate.validator" additivity="false">     
+    <level value="INFO" />   
+    <appender-ref ref="sysout" />
+  </logger>       
   <root>
     <level value="DEBUG" />
     <appender-ref ref="sysout" />

@@ -38,15 +38,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-		</dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-        </dependency>   
+		</dependency>  
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
@@ -128,8 +120,8 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty.version}</version>
 				<configuration>
-					<!-- <reload>manual</reload> -->
-					<!-- <scanIntervalSeconds>10</scanIntervalSeconds> -->
+					<reload>automatic</reload>
+					<scanIntervalSeconds>10</scanIntervalSeconds>
 					<jettyEnvXml>WebContent/WEB-INF/jetty-env.xml</jettyEnvXml>
 					<webAppSourceDirectory>WebContent</webAppSourceDirectory>
 					<connectors>

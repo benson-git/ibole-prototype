@@ -3,10 +3,10 @@
 
 	<display-name>Example Client Website Services</display-name>
 	
-	<!-- Context ConfigLocation 
-	<context-param>
+	<!-- Context ConfigLocation--> 
+	<!--<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath*:META-INF/spring/service-consumer.xml</param-value>
+		<param-value>classpath*:META-INF/spring/spring-shiro.xml</param-value>
 	</context-param>
     <listener>
         <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
@@ -17,6 +17,28 @@
 	<listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>  
 	</listener>-->
+	
+    <!-- Shiro Filter is defined in the spring application context: -->
+    <filter>
+        <filter-name>shiroFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <async-supported>true</async-supported>
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <!-- targetBeanName就是bean的名称，如果没有设置的话，那么就默认使用的Filter名称。
+                       只需要设置targetBeanName和spring-context-shiro配置文件中ShiroFilterFactoryBean的bean名称一样即可 -->
+        <init-param>
+            <param-name>targetBeanName</param-name>
+            <param-value>shiroFilter</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>shiroFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    	
 	<filter>
 		<filter-name>encodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -45,23 +67,14 @@
 	</filter-mapping>
 	
    <!-- 将POST请求转化为DELETE或者是PUT 要用_method指定真正的请求参数 -->  
-    <filter>  
+   <!-- <filter>  
         <filter-name>HiddenHttpMethodFilter</filter-name>  
         <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>  
     </filter>  
     <filter-mapping>  
         <filter-name>HiddenHttpMethodFilter</filter-name>  
         <url-pattern>/*</url-pattern>  
-    </filter-mapping>
-    
-	<filter>
-	    <filter-name>springSecurityFilterChain</filter-name>
-	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
-	<filter-mapping>
-	    <filter-name>springSecurityFilterChain</filter-name>
-	    <url-pattern>/*</url-pattern>
-	</filter-mapping> 	
+    </filter-mapping> --> 
 		
 	<!-- MVC Servlet -->
 	<servlet>

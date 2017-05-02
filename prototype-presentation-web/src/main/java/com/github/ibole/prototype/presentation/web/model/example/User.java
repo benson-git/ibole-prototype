@@ -37,6 +37,8 @@ public class User {
   private Long id;
   @NotNull(message="{username.not.empty}") 
   private String userName;
+  
+  private String digestkey;
 
   public User() {}
   /**
@@ -74,6 +76,18 @@ public class User {
    */
   public void setUserName(String userName) {
     this.userName = userName;
+  }
+  /**
+   * @return the digestkey
+   */
+  public String getDigestkey() {
+    return digestkey;
+  }
+  /**
+   * @param digestkey the digestkey to set
+   */
+  public void setDigestkey(String digestkey) {
+    this.digestkey = digestkey;
   }
   
   
