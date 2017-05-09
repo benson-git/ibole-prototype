@@ -14,6 +14,10 @@
 
 package com.github.ibole.prototype.presentation.web.security.shiro;
 
+import com.github.ibole.infrastructure.security.jwt.JwtProvider;
+import com.github.ibole.infrastructure.security.jwt.TokenAuthenticator;
+import com.github.ibole.infrastructure.spi.cache.redis.RedisSimpleTempalte;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
@@ -67,6 +71,16 @@ public class ShiroConfig {
    * @Bean public EhCacheManager getEhCacheManager() { EhCacheManager em = new EhCacheManager();
    * em.setCacheManagerConfigFile("classpath:ehcache-shiro.xml"); return em; }
    */
+  
+  @Bean
+  public RedisSimpleTempalte setRedisSimpleTempalte() {
+    return new RedisSimpleTempalte("localhost", 6379, "ibole2017");
+  }
+  
+  @Bean
+  public TokenAuthenticator geTokenAuthenticator(RedisSimpleTempalte redisTemplate){
+    return JwtProvider.provider().createTokenGenerator(redisTemplate);
+  }
   
   @Bean
   public WsService getWsService(){

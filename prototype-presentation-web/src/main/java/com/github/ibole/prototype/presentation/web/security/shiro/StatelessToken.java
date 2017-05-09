@@ -39,12 +39,12 @@ public class StatelessToken implements AuthenticationToken {
   private static final long serialVersionUID = -4328416906451280823L;
   private Object principal;
   private Map<String, ?> params;
-  private String clientDigest;
+  private String token;
 
-  public StatelessToken(String loginId, Map<String, ?> params, String clientDigest) {
+  public StatelessToken(String loginId, Map<String, ?> params, String token) {
     this.principal = loginId;
     this.params = params;
-    this.clientDigest = clientDigest;
+    this.token = token;
   }
 
   public void setPrincipal(Object principal) {
@@ -59,12 +59,12 @@ public class StatelessToken implements AuthenticationToken {
     this.params = params;
   }
 
-  public String getClientDigest() {
-    return clientDigest;
+  public String getToken() {
+    return token;
   }
 
-  public void setClientDigest(String clientDigest) {
-    this.clientDigest = clientDigest;
+  public void setToken(String clientDigest) {
+    this.token = clientDigest;
   }
 
   @Override
@@ -74,12 +74,12 @@ public class StatelessToken implements AuthenticationToken {
 
   @Override
   public Object getCredentials() {
-    return clientDigest;
+    return token;
   }
 
   @Override
   public String toString() {
-    return "StatelessToken{" + "principal=" + principal + ", params=" + params + ", clientDigest='"
-        + clientDigest + '\'' + '}';
+    return "StatelessToken{" + "principal=" + principal + ", params=" + params + ", token='"
+        + token + '\'' + '}';
   }
 }

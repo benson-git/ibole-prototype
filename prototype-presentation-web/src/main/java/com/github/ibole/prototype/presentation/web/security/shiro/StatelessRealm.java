@@ -81,7 +81,7 @@ public class StatelessRealm extends AuthorizingRealm {
      String serverDigetst = HmacSHA256Utils.digest(wsUser.getDigestkey(), statelessToken.getParams());
      logger.info(serverDigetst);
      return new SimpleAuthenticationInfo(
-         wsUser.getUserName(), //用户名
+         wsUser.getUsername(), //用户名
            serverDigetst,
            getName()  //realm name
      );

@@ -129,10 +129,10 @@ public class UserRestController{
   @ApiImplicitParams({ @ApiImplicitParam(name = "id", value = "用户ID", paramType="path", required = true, dataType = "Long"),  
           @ApiImplicitParam(name = "user", value = "用户详细实体user", required = true, dataType = "User") })   
   @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)   
-  public ResponseEntity<User> update(@PathVariable("id") Long id, @RequestBody User user) {  
+  public ResponseEntity<User> update(@PathVariable("id") Long id, @RequestBody User user) { 
     //userService.updateUser(user);
     User u = users.get(id);  
-    u.setUserName(user.getUserName());  
+    u.setUsername(user.getUsername());  
     users.put(id, u); 
     return new ResponseEntity<User>(u, HttpStatus.OK); 
   } 
@@ -147,9 +147,9 @@ public class UserRestController{
   @ApiOperation(value = "删除用户", notes = "根据url的id来指定删除对象")  
   @ApiImplicitParam(name = "id",  value = "用户ID", paramType="path", required = true, dataType = "Long")  
   @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)  
-  public ResponseEntity<User> delete(@PathVariable("id") Long id) { 
+  public ResponseEntity<User> delete(@PathVariable("id") Long id) {
     //userService.deleteUserById(id);
     users.remove(id); 
-    return new ResponseEntity<User>(HttpStatus.NO_CONTENT);  
+    return new ResponseEntity<User>(HttpStatus.NO_CONTENT); 
   }  
 }

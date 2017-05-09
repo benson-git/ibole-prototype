@@ -71,7 +71,7 @@ public class WsService {
       return null;
     }
     User user = new User();
-    user.setUserName("test");
+    user.setUsername("test");
     user.setDigestkey("password");
     return user;
   }
@@ -85,7 +85,7 @@ public class WsService {
       return null;
     }
     User user = new User();
-    user.setUserName(loginId);
+    user.setUsername(loginId);
     user.setDigestkey(password);
     return user;
   }

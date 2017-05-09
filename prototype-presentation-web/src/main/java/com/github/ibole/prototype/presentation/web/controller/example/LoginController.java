@@ -16,14 +16,20 @@
 
 package com.github.ibole.prototype.presentation.web.controller.example;
 
-import com.github.ibole.infrastructure.common.utils.Constants;
+import com.github.ibole.infrastructure.security.jwt.JwtObject;
+import com.github.ibole.infrastructure.security.jwt.TokenAuthenticator;
+import com.github.ibole.infrastructure.security.jwt.TokenHandlingException;
+import com.github.ibole.prototype.presentation.web.model.example.LoginUser;
 import com.github.ibole.prototype.presentation.web.model.example.User;
+import com.github.ibole.prototype.presentation.web.security.shiro.StatelessToken;
 import com.github.ibole.prototype.presentation.web.security.shiro.WsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,6 +38,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.ApiOperation;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 /*********************************************************************************************.
  * 
@@ -53,18 +61,38 @@ public class LoginController {
   
   @Autowired
   private WsService wsService;
+  
+  @Autowired
+  private TokenAuthenticator tokenAuthenticator;
 
   @ApiOperation(value="登录", notes="用户登录")
   @ResponseBody
-  @RequestMapping(value = "/login", method = RequestMethod.POST)
-  public ResponseEntity<User> login(HttpServletRequest request) {
-    String userName = request.getParameter(Constants.STATELESS_PARAM_USERNAME);
-    String password = request.getParameter(Constants.WS_PARAM_PASSWORD);
-    User user = wsService.findWsUser(userName, password);
+  @RequestMapping(value = "/authenticate", method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<StatelessToken> login(@Valid @RequestBody LoginUser loginUser, HttpServletRequest request, HttpServletResponse response) {
+    User user = wsService.findWsUser(loginUser.getUsername(), loginUser.getPassword());
+    StatelessToken token;
     if (user != null) {
-      return new ResponseEntity<User>(HttpStatus.OK);
+      try {
+        tokenAuthenticator.createRefreshToken(buildJwtObject(loginUser.getUsername(), 7200, request));
+        String tokenStr = tokenAuthenticator.createAccessToken(buildJwtObject(loginUser.getUsername(), 3600, request));
+        token = new StatelessToken(loginUser.getUsername(), null, tokenStr);
+      } catch (TokenHandlingException e) {
+        e.printStackTrace();
+        return new ResponseEntity<StatelessToken>(HttpStatus.UNAUTHORIZED);
+      }
+      return new ResponseEntity<StatelessToken>(token, HttpStatus.OK);
     } else {
-      return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
+      return new ResponseEntity<StatelessToken>(HttpStatus.UNAUTHORIZED);
     }
+  }
+  
+  private JwtObject buildJwtObject(String loginId, int ttl, HttpServletRequest request){
+    JwtObject claim = new JwtObject();
+    claim.setClientId(request.getRemoteAddr());
+    claim.setLoginId(loginId);
+    claim.setAudience(loginId);
+    claim.setTtlSeconds(ttl);
+    return claim;
   }
 }

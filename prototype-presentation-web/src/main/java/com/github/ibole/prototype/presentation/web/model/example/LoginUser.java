@@ -31,41 +31,12 @@ import javax.validation.constraints.NotNull;
  * @author bwang
  *
  */
-public class User {
+public class LoginUser {
 
-  @NotNull(message="{id.not.empty}") 
-  private Long id;
   @NotNull(message="{username.not.empty}") 
   private String username;
-  
+  @NotNull(message="{password.not.empty}")
   private String password;
-  
-  private String digestkey;
-
-  public User() {}
-  /**
-   * @param i
-   * @param string
-   */
-  public User(Long id, String userName) {
-    this.id = id;
-    this.username = userName;
-  }
-
-  /**
-   * @return the id
-   */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  public void setId(Long id) {
-    this.id = id;
-  }
-
   /**
    * @return the username
    */
@@ -89,18 +60,6 @@ public class User {
    */
   public void setPassword(String password) {
     this.password = password;
-  }
-  /**
-   * @return the digestkey
-   */
-  public String getDigestkey() {
-    return digestkey;
-  }
-  /**
-   * @param digestkey the digestkey to set
-   */
-  public void setDigestkey(String digestkey) {
-    this.digestkey = digestkey;
   }
   
   
