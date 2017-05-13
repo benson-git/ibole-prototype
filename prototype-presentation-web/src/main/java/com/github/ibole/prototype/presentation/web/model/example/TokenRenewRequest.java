@@ -16,8 +16,6 @@
 
 package com.github.ibole.prototype.presentation.web.model.example;
 
-import javax.validation.constraints.NotNull;
-
 /*********************************************************************************************.
  * 
  * 
@@ -28,68 +26,41 @@ import javax.validation.constraints.NotNull;
 
 
 /**
- * User login information, only use for login case.
- * 
  * @author bwang
  *
  */
-public class LoginInfo {
+public class TokenRenewRequest {
 
-  @NotNull(message="{username.not.empty}") 
-  private String username;
-  @NotNull(message="{password.not.empty}")
-  private String password;
-  //nullable for the login from PC side, notnull for Mobile.
   private String clientId;
   
-  /**
-   * 
-   * @param username String
-   * @param password String
-   * @param clientId String
-   */
-  public LoginInfo(String username, String password, String clientId) {
-    this.username = username;
-    this.password = password;
-    this.clientId = clientId;
-  }
-  
-  /**
-   * @return the username
-   */
-  public String getUsername() {
-    return username;
-  }
-  /**
-   * @param username the username to set
-   */
-  public void setUsername(String username) {
-    this.username = username;
-  }
-  /**
-   * @return the password
-   */
-  public String getPassword() {
-    return password;
-  }
-  /**
-   * @param password the password to set
-   */
-  public void setPassword(String password) {
-    this.password = password;
-  }
+  private String refreshToken;
+
   /**
    * @return the clientId
    */
   public String getClientId() {
     return clientId;
   }
+
   /**
    * @param clientId the clientId to set
    */
   public void setClientId(String clientId) {
     this.clientId = clientId;
   }
-  
+
+  /**
+   * @return the refreshToken
+   */
+  public String getRefreshToken() {
+    return refreshToken;
+  }
+
+  /**
+   * @param refreshToken the refreshToken to set
+   */
+  public void setRefreshToken(String refreshToken) {
+    this.refreshToken = refreshToken;
+  }
   
 }

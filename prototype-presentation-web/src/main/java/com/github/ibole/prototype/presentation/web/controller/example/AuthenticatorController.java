@@ -14,11 +14,12 @@
 
 package com.github.ibole.prototype.presentation.web.controller.example;
 
+import com.github.ibole.infrastructure.common.UserPrincipalProto.AuthTokenInfo;
 import com.github.ibole.infrastructure.security.jwt.JwtObject;
 import com.github.ibole.infrastructure.security.jwt.TokenAuthenticator;
 import com.github.ibole.infrastructure.security.jwt.TokenHandlingException;
-import com.github.ibole.prototype.presentation.web.model.example.AuthTokenInfo;
-import com.github.ibole.prototype.presentation.web.model.example.LoginInfo;
+import com.github.ibole.prototype.presentation.web.model.example.LoginResponse;
+import com.github.ibole.prototype.presentation.web.model.example.LoginRequest;
 import com.github.ibole.prototype.presentation.web.model.example.User;
 import com.github.ibole.prototype.presentation.web.security.shiro.WsService;
 
@@ -32,8 +33,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.annotations.ApiOperation;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,43 +56,62 @@ import javax.validation.Valid;
  */
 @RestController
 @Component
-@RequestMapping("/api/v1")
-public class LoginController {
+@RequestMapping("/api/v1/auth")
+public class AuthenticatorController {
 
   @Autowired
   private WsService wsService;
 
   @Autowired
-  private TokenAuthenticator tokenAuthenticator;
+  private TokenAuthenticator tokenMgr;
 
-  @ApiOperation(value = "登录", notes = "用户登录")
+  /**
+   * User login with username and password provided.
+   */
   @ResponseBody
   @RequestMapping(value = "/authenticate", method = RequestMethod.POST,
       consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<AuthTokenInfo> login(@Valid @RequestBody LoginInfo loginUser,
+  public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginUser,
       HttpServletRequest request, HttpServletResponse response) {
     User user = wsService.findWsUser(loginUser.getUsername(), loginUser.getPassword());
-    AuthTokenInfo tokenInfo = AuthTokenInfo.DEFAULT;
+    LoginResponse result = LoginResponse.DEFAULT;
     if (user != null) {
       try {
         String refreshToken =
-            tokenAuthenticator.createRefreshToken(buildJwtObject(loginUser.getUsername(), 7200,
-                request));
+            tokenMgr.createRefreshToken(buildJwtObject(loginUser.getUsername(), 7200, request));
         String accessToken =
-            tokenAuthenticator.createAccessToken(buildJwtObject(loginUser.getUsername(), 3600,
-                request));
-        tokenInfo.withUsername(loginUser.getUsername()).withRefreshToken(refreshToken)
-            .withAccessToken(accessToken).withLoginRequired(false);
+            tokenMgr.createAccessToken(buildJwtObject(loginUser.getUsername(), 3600, request));
+        result.setRefreshToken(refreshToken);
+        result.setAccessToken(accessToken);
+        result.setAuthenticated(true);
       } catch (TokenHandlingException e) {
-        return new ResponseEntity<AuthTokenInfo>(tokenInfo.withLoginRequired(true).withDescription(
-            e.getMessage()), HttpStatus.UNAUTHORIZED);
+        result.setAuthenticated(false);
+        result.setErrorMessage(e.getMessage());
+        return new ResponseEntity<LoginResponse>(result, HttpStatus.UNAUTHORIZED);
       }
-      return new ResponseEntity<AuthTokenInfo>(tokenInfo, HttpStatus.OK);
+      return new ResponseEntity<LoginResponse>(result, HttpStatus.OK);
     } else {
-      return new ResponseEntity<AuthTokenInfo>(tokenInfo.withLoginRequired(true),
-          HttpStatus.UNAUTHORIZED);
+      result.setAuthenticated(false);
+      return new ResponseEntity<LoginResponse>(result, HttpStatus.UNAUTHORIZED);
     }
   }
+
+  /**
+   * 
+   * Renew a new access token with the refresh token and username.
+   */
+  @RequestMapping(value = "/renew", method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<LoginResponse> renew(@Valid @RequestBody AuthTokenInfo reqTokenInfo,
+      HttpServletRequest request, HttpServletResponse response) {
+    LoginResponse resTokenInfo = LoginResponse.DEFAULT;
+
+   // if(reqTokenInfo.get)
+    //tokenMgr.validRefreshToken(token, clientId)
+
+    return new ResponseEntity<LoginResponse>(resTokenInfo, HttpStatus.OK);
+  }
+
 
   private JwtObject buildJwtObject(String loginId, int ttl, HttpServletRequest request) {
     JwtObject claim = new JwtObject();
