@@ -16,6 +16,8 @@
 
 package com.github.ibole.prototype.presentation.web.model.example;
 
+import com.github.ibole.infrastructure.security.jwt.TokenStatus;
+
 /*********************************************************************************************.
  * 
  * 
@@ -30,6 +32,10 @@ package com.github.ibole.prototype.presentation.web.model.example;
  *
  */
 public final class TokenRenewResponse {
+  /**
+   * A blank {@code TokenRenewResponse} that all fields are not set.
+   */
+  public static final TokenRenewResponse DEFAULT = new TokenRenewResponse();
 
   //identify whether the token that user provided is authenticated or not,
   // user need to login if loginRequired is true.
@@ -81,4 +87,7 @@ public final class TokenRenewResponse {
     this.tokenStatus = tokenStatus;
   }
   
+  public void setTokenStatus(TokenStatus status) {
+    this.tokenStatus = status.getCode().value();
+  }
 }

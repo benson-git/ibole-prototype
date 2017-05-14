@@ -14,15 +14,21 @@
 
 package com.github.ibole.prototype.presentation.web.controller.example;
 
-import com.github.ibole.infrastructure.common.UserPrincipalProto.AuthTokenInfo;
 import com.github.ibole.infrastructure.security.jwt.JwtObject;
 import com.github.ibole.infrastructure.security.jwt.TokenAuthenticator;
 import com.github.ibole.infrastructure.security.jwt.TokenHandlingException;
-import com.github.ibole.prototype.presentation.web.model.example.LoginResponse;
+import com.github.ibole.infrastructure.security.jwt.TokenStatus;
 import com.github.ibole.prototype.presentation.web.model.example.LoginRequest;
+import com.github.ibole.prototype.presentation.web.model.example.LoginResponse;
+import com.github.ibole.prototype.presentation.web.model.example.TokenRenewRequest;
+import com.github.ibole.prototype.presentation.web.model.example.TokenRenewResponse;
 import com.github.ibole.prototype.presentation.web.model.example.User;
 import com.github.ibole.prototype.presentation.web.security.shiro.WsService;
 
+import com.google.common.base.Strings;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -58,6 +64,8 @@ import javax.validation.Valid;
 @Component
 @RequestMapping("/api/v1/auth")
 public class AuthenticatorController {
+  
+  private Logger logger = LoggerFactory.getLogger(getClass().getName());
 
   @Autowired
   private WsService wsService;
@@ -85,8 +93,8 @@ public class AuthenticatorController {
         result.setAccessToken(accessToken);
         result.setAuthenticated(true);
       } catch (TokenHandlingException e) {
+        logger.error("Login error happen with user '{}'", loginUser.getUsername(), e);
         result.setAuthenticated(false);
-        result.setErrorMessage(e.getMessage());
         return new ResponseEntity<LoginResponse>(result, HttpStatus.UNAUTHORIZED);
       }
       return new ResponseEntity<LoginResponse>(result, HttpStatus.OK);
@@ -102,14 +110,41 @@ public class AuthenticatorController {
    */
   @RequestMapping(value = "/renew", method = RequestMethod.POST,
       consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<LoginResponse> renew(@Valid @RequestBody AuthTokenInfo reqTokenInfo,
-      HttpServletRequest request, HttpServletResponse response) {
-    LoginResponse resTokenInfo = LoginResponse.DEFAULT;
+  public ResponseEntity<TokenRenewResponse> renew(
+      @Valid @RequestBody TokenRenewRequest reqTokenInfo, HttpServletRequest request,
+      HttpServletResponse response) {
 
-   // if(reqTokenInfo.get)
-    //tokenMgr.validRefreshToken(token, clientId)
+    ResponseEntity<TokenRenewResponse> entityResponse =
+        new ResponseEntity<TokenRenewResponse>(HttpStatus.UNAUTHORIZED);
+    TokenRenewResponse newTokenResponse = TokenRenewResponse.DEFAULT;
 
-    return new ResponseEntity<LoginResponse>(resTokenInfo, HttpStatus.OK);
+    if (Strings.isNullOrEmpty(reqTokenInfo.getClientId())) {
+      // the request is from pc
+      reqTokenInfo.setClientId(request.getRemoteAddr());
+    }
+
+    TokenStatus status =
+        tokenMgr.validRefreshToken(reqTokenInfo.getRefreshToken(), reqTokenInfo.getClientId());
+    newTokenResponse.setTokenStatus(status);
+    
+    try {
+      if (status.isValidated()) {
+        String accessToken = tokenMgr.renewAccessToken(reqTokenInfo.getRefreshToken(), 3600);
+        newTokenResponse.setAccessToken(accessToken);
+        newTokenResponse.setLoginRequired(false);
+        entityResponse = ResponseEntity.status(HttpStatus.OK).body(newTokenResponse);
+      } else {
+        newTokenResponse.setLoginRequired(true);
+        entityResponse = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(newTokenResponse);
+      }
+      
+    } catch (TokenHandlingException e) {
+      logger.error("token renew error happen with refresh token '{}' from client '{}'",
+          reqTokenInfo.getRefreshToken(), reqTokenInfo.getClientId(), e);
+      newTokenResponse.setLoginRequired(true);
+      entityResponse = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(newTokenResponse);
+    }
+    return entityResponse;
   }
 
 
