@@ -88,7 +88,7 @@ public class AuthenticatorController {
         String refreshToken =
             tokenMgr.createRefreshToken(buildJwtObject(loginUser.getUsername(), 7200, request));
         String accessToken =
-            tokenMgr.createAccessToken(buildJwtObject(loginUser.getUsername(), 3600, request));
+            tokenMgr.createAccessToken(buildJwtObject(loginUser.getUsername(), 10, request));
         result.setRefreshToken(refreshToken);
         result.setAccessToken(accessToken);
         result.setAuthenticated(true);
