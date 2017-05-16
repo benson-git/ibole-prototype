@@ -48,8 +48,7 @@ import javax.validation.Valid;
  * .
  * 
  * 
- * <p>
- * Copyright 2016, iBole Inc. All rights reserved.
+ * <p>Copyright 2016, iBole Inc. All rights reserved.
  * 
  * <p>
  * </p>
@@ -64,7 +63,7 @@ import javax.validation.Valid;
 @Component
 @RequestMapping("/api/v1/auth")
 public class AuthenticatorController {
-  
+
   private Logger logger = LoggerFactory.getLogger(getClass().getName());
 
   @Autowired
@@ -82,7 +81,7 @@ public class AuthenticatorController {
   public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginUser,
       HttpServletRequest request, HttpServletResponse response) {
     User user = wsService.findWsUser(loginUser.getUsername(), loginUser.getPassword());
-    LoginResponse result = LoginResponse.DEFAULT;
+    LoginResponse result = new LoginResponse();
     if (user != null) {
       try {
         String refreshToken =
@@ -116,7 +115,7 @@ public class AuthenticatorController {
 
     ResponseEntity<TokenRenewResponse> entityResponse =
         new ResponseEntity<TokenRenewResponse>(HttpStatus.UNAUTHORIZED);
-    TokenRenewResponse newTokenResponse = TokenRenewResponse.DEFAULT;
+    TokenRenewResponse newTokenResponse = new TokenRenewResponse();
 
     if (Strings.isNullOrEmpty(reqTokenInfo.getClientId())) {
       // the request is from pc
@@ -126,7 +125,7 @@ public class AuthenticatorController {
     TokenStatus status =
         tokenMgr.validRefreshToken(reqTokenInfo.getRefreshToken(), reqTokenInfo.getClientId());
     newTokenResponse.setTokenStatus(status);
-    
+
     try {
       if (status.isValidated()) {
         String accessToken = tokenMgr.renewAccessToken(reqTokenInfo.getRefreshToken(), 120);
@@ -137,7 +136,7 @@ public class AuthenticatorController {
         newTokenResponse.setLoginRequired(true);
         entityResponse = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(newTokenResponse);
       }
-      
+
     } catch (TokenHandlingException e) {
       logger.error("Renew token error happen with refresh token '{}' from client '{}'",
           reqTokenInfo.getRefreshToken(), reqTokenInfo.getClientId(), e);
@@ -151,7 +150,7 @@ public class AuthenticatorController {
   private JwtObject buildJwtObject(String loginId, int ttl, HttpServletRequest request) {
     JwtObject claim = new JwtObject();
     claim.setClientId(request.getRemoteAddr());
-    
+
     claim.setLoginId(loginId);
     claim.setAudience(loginId);
     claim.setTtlSeconds(ttl);

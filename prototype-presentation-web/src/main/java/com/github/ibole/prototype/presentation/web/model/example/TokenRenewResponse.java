@@ -32,10 +32,6 @@ import com.github.ibole.infrastructure.security.jwt.TokenStatus;
  *
  */
 public final class TokenRenewResponse {
-  /**
-   * A blank {@code TokenRenewResponse} that all fields are not set.
-   */
-  public static final TokenRenewResponse DEFAULT = new TokenRenewResponse();
 
   //identify whether the token that user provided is authenticated or not,
   // user need to login if loginRequired is true.

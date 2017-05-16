@@ -35,17 +35,13 @@ package com.github.ibole.prototype.presentation.web.model.example;
  */
 public class LoginResponse {
   
-  /**
-   * A blank {@code LoginResponse} that all fields are not set.
-   */
-  public static final LoginResponse DEFAULT = new LoginResponse();
   //login successfully: true, otherwise is false
   private boolean authenticated;
   private String refreshToken;
   private String accessToken;
   //token status or errorMessage
   private String errorMessage;
- 
+  
   /**
    * @return the authenticated
    */
