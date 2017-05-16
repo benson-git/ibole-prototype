@@ -86,9 +86,9 @@ public class AuthenticatorController {
     if (user != null) {
       try {
         String refreshToken =
-            tokenMgr.createRefreshToken(buildJwtObject(loginUser.getUsername(), 7200, request));
+            tokenMgr.createRefreshToken(buildJwtObject(loginUser.getUsername(), 360, request));
         String accessToken =
-            tokenMgr.createAccessToken(buildJwtObject(loginUser.getUsername(), 10, request));
+            tokenMgr.createAccessToken(buildJwtObject(loginUser.getUsername(), 60, request));
         result.setRefreshToken(refreshToken);
         result.setAccessToken(accessToken);
         result.setAuthenticated(true);
@@ -129,7 +129,7 @@ public class AuthenticatorController {
     
     try {
       if (status.isValidated()) {
-        String accessToken = tokenMgr.renewAccessToken(reqTokenInfo.getRefreshToken(), 3600);
+        String accessToken = tokenMgr.renewAccessToken(reqTokenInfo.getRefreshToken(), 120);
         newTokenResponse.setAccessToken(accessToken);
         newTokenResponse.setLoginRequired(false);
         entityResponse = ResponseEntity.status(HttpStatus.OK).body(newTokenResponse);
@@ -139,7 +139,7 @@ public class AuthenticatorController {
       }
       
     } catch (TokenHandlingException e) {
-      logger.error("token renew error happen with refresh token '{}' from client '{}'",
+      logger.error("Renew token error happen with refresh token '{}' from client '{}'",
           reqTokenInfo.getRefreshToken(), reqTokenInfo.getClientId(), e);
       newTokenResponse.setLoginRequired(true);
       entityResponse = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(newTokenResponse);
@@ -151,6 +151,7 @@ public class AuthenticatorController {
   private JwtObject buildJwtObject(String loginId, int ttl, HttpServletRequest request) {
     JwtObject claim = new JwtObject();
     claim.setClientId(request.getRemoteAddr());
+    
     claim.setLoginId(loginId);
     claim.setAudience(loginId);
     claim.setTtlSeconds(ttl);

@@ -40,17 +40,29 @@ public class User {
   
   private String password;
   
+  private String firstName;
+  
+  private String lastName;
+  
   private String digestkey;
 
   public User() {}
+  
   /**
-   * @param i
-   * @param string
+   * @param id user id
+   * @param username the user name
+   * @param password the user password
+   * @param firstName the first name
+   * @param lastName the last name
    */
-  public User(Long id, String userName) {
+  public User(Long id, String username, String password, String firstName, String lastName) {
     this.id = id;
-    this.username = userName;
+    this.username = username;
+    this.password = password;
+    this.firstName = firstName;
+    this.lastName = lastName;
   }
+
 
   /**
    * @return the id
@@ -89,6 +101,32 @@ public class User {
    */
   public void setPassword(String password) {
     this.password = password;
+  }
+  
+  
+  /**
+   * @return the firstName
+   */
+  public String getFirstName() {
+    return firstName;
+  }
+  /**
+   * @param firstName the firstName to set
+   */
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
+  /**
+   * @return the lastName
+   */
+  public String getLastName() {
+    return lastName;
+  }
+  /**
+   * @param lastName the lastName to set
+   */
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
   }
   /**
    * @return the digestkey

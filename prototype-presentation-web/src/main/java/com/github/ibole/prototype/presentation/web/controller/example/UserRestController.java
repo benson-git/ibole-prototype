@@ -80,6 +80,7 @@ public class UserRestController{
   
   @ApiOperation(value = "获取用户列表", notes = "")  
   @RequestMapping(value = { "" }, method = RequestMethod.GET)  
+  @ResponseBody
   public List<User> getUserList() {  
       List<User> r = new ArrayList<User>(users.values());  
       return r;  
