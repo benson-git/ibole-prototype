@@ -14,6 +14,10 @@
 
 package com.github.ibole.prototype.presentation.web.config;
 
+import static com.google.common.collect.Lists.newArrayList;
+
+import com.google.common.collect.Lists;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -26,10 +30,18 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger.web.ApiKeyVehicle;
+import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.List;
 
 /*********************************************************************************************
  * .
@@ -44,14 +56,16 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
 /**
- * Restful API 访问路径: 
- * http://IP:port/{context-path}/documentation/swagger-ui.html 
+ * Restful API 访问路径: http://IP:port/{context-path}/documentation/swagger-ui.html
+ * 
+ * http://springfox.github.io/springfox/docs/current/#springfox-swagger2-with-spring-mvc-and-spring-boot
  * 
  * @author bwang
  *
  */
 @Configuration
-@EnableWebMvc //NOTE: Only needed in a non-springboot application
+@EnableWebMvc
+// NOTE: Only needed in a non-springboot application
 @ComponentScan("com.github.ibole.prototype.presentation.web.controller")
 @EnableSwagger2
 public class RestApiConfig extends WebMvcConfigurerAdapter {
@@ -79,11 +93,35 @@ public class RestApiConfig extends WebMvcConfigurerAdapter {
   public Docket createRestApi() {
     return new Docket(DocumentationType.SWAGGER_2)
         .apiInfo(apiInfo())
+        .securitySchemes(Lists.newArrayList(apiKey()))
+        .securityContexts(newArrayList(securityContext()))
         .select()
         .apis(
             RequestHandlerSelectors
                 .basePackage("com.github.ibole.prototype.presentation.web.controller"))
         .paths(PathSelectors.any()).build();
+  }
+
+  private ApiKey apiKey() {
+    return new ApiKey("Authorization", "api_key", "header");
+  }
+
+  private SecurityContext securityContext() {
+    return SecurityContext.builder().securityReferences(defaultAuth())
+        .forPaths(PathSelectors.regex("/")).build();
+  }
+
+  List<SecurityReference> defaultAuth() {
+    AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+    AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+    authorizationScopes[0] = authorizationScope;
+    return newArrayList(new SecurityReference("Authorization", authorizationScopes));
+  }
+  
+  @Bean
+  SecurityConfiguration security() {
+    return new SecurityConfiguration(null, null, null, null, "apiKey",
+        ApiKeyVehicle.HEADER, "api_key", ",");
   }
 
   private ApiInfo apiInfo() {
@@ -92,7 +130,8 @@ public class RestApiConfig extends WebMvcConfigurerAdapter {
         .title("Spring Restful中使用Swagger2构建RESTful APIs")
         .description(
             "更多细节请关注：https://github.com/benson-git/ibole-prototype/tree/master/prototype-presentation-web")
-        .termsOfServiceUrl("https://github.com/benson-git/ibole-prototype/tree/master/prototype-presentation-web")
+        .termsOfServiceUrl(
+            "https://github.com/benson-git/ibole-prototype/tree/master/prototype-presentation-web")
         .contact(contact).version("1.0").build();
   }
 }

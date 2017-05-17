@@ -160,18 +160,18 @@ public class ShiroConfig {
    */
   private void loadShiroFilterChain(ShiroFilterFactoryBean shiroFilterFactoryBean) {
     Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-    //filterChainDefinitionMap.put("/documentation/**", "anon");
-    //filterChainDefinitionMap.put("/v2/api-docs", "anon");
-    //filterChainDefinitionMap.put("/configuration/ui", "anon");
-    //filterChainDefinitionMap.put("/configuration/security", "anon");
-    //filterChainDefinitionMap.put("/swagger-resources/**", "anon");
-    //filterChainDefinitionMap.put("/swagger-ui.html", "anon");
-    //filterChainDefinitionMap.put("/webjars/**", "anon");
+    filterChainDefinitionMap.put("/documentation/**", "anon");
+    filterChainDefinitionMap.put("/v2/api-docs", "anon");
+    filterChainDefinitionMap.put("/configuration/ui", "anon");
+    filterChainDefinitionMap.put("/configuration/security", "anon");
+    filterChainDefinitionMap.put("/swagger-resources/**", "anon");
+    filterChainDefinitionMap.put("/swagger-ui.html", "anon");
+    filterChainDefinitionMap.put("/webjars/**", "anon");
     // filterChainDefinitionMap.put("/users/**", "user, anyRoles[system,general]");
     // filterChainDefinitionMap.put("/users/**", "user," + ANY_ROLES + "[system,general]");
     // 例子/admins/user/**=rest[user],根据请求的方法，相当于/admins/user/**=perms[user:method] ,
     // 其中method为post，get，delete等。
-    //filterChainDefinitionMap.put("/api/v1/users/**", STATELESS_AUTHC + "," + REST + "[admin]");
+    filterChainDefinitionMap.put("/api/v1/users/**", STATELESS_AUTHC + "," + REST + "[user]");
     shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
   }
 
@@ -195,7 +195,7 @@ public class ShiroConfig {
     shiroFilterFactoryBean.setSecurityManager(securityManager);
     shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized");
     // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
-    shiroFilterFactoryBean.setLoginUrl("/login");
+    shiroFilterFactoryBean.setLoginUrl("/api/v1/auth/authenticate");
     // shiroFilterFactoryBean.setUnauthorizedUrl("/403");
 
     loadShiroFilters(shiroFilterFactoryBean);

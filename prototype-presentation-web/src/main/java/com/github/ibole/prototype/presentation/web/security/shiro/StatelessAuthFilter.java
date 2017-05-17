@@ -14,7 +14,8 @@
 
 package com.github.ibole.prototype.presentation.web.security.shiro;
 
-import com.github.ibole.infrastructure.common.utils.Constants;
+import com.github.ibole.infrastructure.security.jwt.JwtObject;
+import com.github.ibole.infrastructure.security.jwt.jose4j.JoseUtils;
 
 import com.google.common.base.Strings;
 
@@ -25,12 +26,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /*********************************************************************************************
@@ -59,46 +58,36 @@ public class StatelessAuthFilter extends AccessControlFilter {
     return false;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   protected boolean onAccessDenied(ServletRequest request, ServletResponse response)
       throws Exception {
-    // 1、客户端生成的消息摘要
-    String clientDigest = request.getParameter(Constants.STATELESS_PARAM_DIGEST);
-    // 2、客户端传入的用户身份
-    String loginId;
+    JwtObject jwtObject = JwtObject.getEmpty();
     try {
-      loginId = request.getParameter(Constants.STATELESS_PARAM_USERNAME);
-    } catch (Throwable throwable) {
-      logger.error("User digest information not found from the request parameters: " + request.getParameterMap());
-      return false;
-    }
-    
-    if(Strings.isNullOrEmpty(clientDigest) || Strings.isNullOrEmpty(loginId)) {
-      onLoginFail(response); 
-      return false;
-    }
-    // 3、客户端请求的参数列表
-    Map<String, String[]> params = new LinkedHashMap<>(request.getParameterMap());
-    params.remove(Constants.STATELESS_PARAM_DIGEST);
-    logger.debug("Filter param:");
-    params.forEach((key, value) -> logger.debug(key + "-" + Arrays.toString(value)));
-    // 4、生成无状态Token
-    StatelessToken token = new StatelessToken(loginId, params, clientDigest);
-    try {
-      // 5、委托给Realm进行登录
+
+      String jwtToken = WsWebUtil.getTokenFromHeader((HttpServletRequest) request);
+
+      if (Strings.isNullOrEmpty(jwtToken)) {
+        onLoginFail(response);
+        return false;
+      }
+      jwtObject = JoseUtils.claimsOfTokenWithoutValidation(jwtToken);
+      StatelessToken token =
+          new StatelessToken(jwtToken, jwtObject.getLoginId(), jwtObject.getClientId());
+      // Delegate to Realm to authenticate the request
       Subject subject = getSubject(request, response);
       subject.login(token);
-      logger.info("Authenticated successfully!");
+      logger.debug("Authenticated successfully for '{}' from '{}'!", jwtObject.getLoginId(),
+          jwtObject.getClientId());
     } catch (Exception e) {
-      logger.error("Authenticated failed - ", e);
-      onLoginFail(response); // 6、登录失败
+      logger.error("Authenticated failed for '{}' from '{}' - ", jwtObject.getLoginId(),
+          jwtObject.getClientId(), e);
+      onLoginFail(response); // failed to authenticate
       return false;
     }
     return true;
   }
 
-  // 登录失败时默认返回401状态码
+  // Response with the 401 status code when the authentication is failed. 
   private void onLoginFail(ServletResponse response) throws IOException {
     HttpServletResponse httpResponse = (HttpServletResponse) response;
     httpResponse.setStatus(HttpStatus.UNAUTHORIZED.value());

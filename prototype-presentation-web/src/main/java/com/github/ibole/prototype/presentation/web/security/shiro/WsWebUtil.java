@@ -17,8 +17,10 @@ package com.github.ibole.prototype.presentation.web.security.shiro;
 import com.alibaba.fastjson.JSONArray;
 import com.github.ibole.infrastructure.common.utils.Constants;
 import com.github.ibole.infrastructure.common.utils.JsonUtils;
+import com.github.ibole.prototype.presentation.web.security.exception.AuthenticationServiceException;
 
-import java.util.ArrayList;
+import com.google.common.base.Strings;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,5 +56,19 @@ public class WsWebUtil {
       String parameter, Class<T> clazz) {
     List<T> resultObjList = JSONArray.parseArray(request.getParameter(parameter), clazz);
     return resultObjList;
+  }
+
+  public static String getTokenFromHeader(HttpServletRequest request) {
+    String authentications = request.getHeader(Constants.HEADER_AUTH_NAME);
+    if (Strings.isNullOrEmpty(authentications)) {
+      throw new AuthenticationServiceException("Authorization header cannot be blank!");
+    }
+
+    if (authentications.length() < Constants.HEADER_AUTH_PREFIX.length()) {
+      throw new AuthenticationServiceException("Invalid authorization header size.");
+    }
+
+    return authentications.substring(Constants.HEADER_AUTH_PREFIX.length(),
+        authentications.length());
   }
 }

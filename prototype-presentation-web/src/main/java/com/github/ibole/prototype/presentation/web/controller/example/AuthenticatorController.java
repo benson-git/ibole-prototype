@@ -102,7 +102,15 @@ public class AuthenticatorController {
       return new ResponseEntity<LoginResponse>(result, HttpStatus.UNAUTHORIZED);
     }
   }
-
+  
+  private <T> ResponseEntity<T> returnResponse(T body, HttpStatus status) {
+    
+    ResponseEntity<T> entityResponse = ResponseEntity.accepted().body(body);
+    entityResponse.status(status);
+    
+    return entityResponse;
+  }
+ 
   /**
    * 
    * Renew a new access token with the refresh token and username.
@@ -119,7 +127,7 @@ public class AuthenticatorController {
 
     if (Strings.isNullOrEmpty(reqTokenInfo.getClientId())) {
       // the request is from pc
-      reqTokenInfo.setClientId(request.getRemoteAddr());
+      reqTokenInfo.setClientId("TODO"/*request.getRemoteAddr()*/);
     }
 
     TokenStatus status =
@@ -149,8 +157,7 @@ public class AuthenticatorController {
 
   private JwtObject buildJwtObject(String loginId, int ttl, HttpServletRequest request) {
     JwtObject claim = new JwtObject();
-    claim.setClientId(request.getRemoteAddr());
-
+    claim.setClientId("TODO"/*request.getRemoteAddr()*/);
     claim.setLoginId(loginId);
     claim.setAudience(loginId);
     claim.setTtlSeconds(ttl);

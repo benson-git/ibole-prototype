@@ -16,8 +16,6 @@ package com.github.ibole.prototype.presentation.web.security.shiro;
 
 import org.apache.shiro.authc.AuthenticationToken;
 
-import java.util.Map;
-
 /*********************************************************************************************
  * .
  * 
@@ -31,6 +29,7 @@ import java.util.Map;
 
 
 /**
+ * Perform bearer token authentication In Shiro.
  * @author bwang
  *
  */
@@ -38,25 +37,17 @@ public class StatelessToken implements AuthenticationToken {
 
   private static final long serialVersionUID = -4328416906451280823L;
   private Object principal;
-  private Map<String, ?> params;
   private String token;
+  private String clientId;
 
-  public StatelessToken(String loginId, Map<String, ?> params, String token) {
+  public StatelessToken(String token, String loginId, String clientId) {
     this.principal = loginId;
-    this.params = params;
     this.token = token;
+    this.clientId = clientId;
   }
 
   public void setPrincipal(Object principal) {
     this.principal = principal;
-  }
-
-  public Map<String, ?> getParams() {
-    return params;
-  }
-
-  public void setParams(Map<String, ?> params) {
-    this.params = params;
   }
 
   public String getToken() {
@@ -77,9 +68,23 @@ public class StatelessToken implements AuthenticationToken {
     return token;
   }
 
+  /**
+   * @return the clientId
+   */
+  public String getClientId() {
+    return clientId;
+  }
+
+  /**
+   * @param clientId the clientId to set
+   */
+  public void setClientId(String clientId) {
+    this.clientId = clientId;
+  }
+
   @Override
   public String toString() {
-    return "StatelessToken{" + "principal=" + principal + ", params=" + params + ", token='"
+    return "StatelessToken{" + "principal=" + principal + ", clientId=" + clientId +", token='"
         + token + '\'' + '}';
   }
 }
