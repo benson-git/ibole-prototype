@@ -22,8 +22,8 @@ import com.github.ibole.prototype.presentation.web.model.example.LoginRequest;
 import com.github.ibole.prototype.presentation.web.model.example.LoginResponse;
 import com.github.ibole.prototype.presentation.web.model.example.TokenRenewRequest;
 import com.github.ibole.prototype.presentation.web.model.example.TokenRenewResponse;
-import com.github.ibole.prototype.presentation.web.model.example.User;
-import com.github.ibole.prototype.presentation.web.security.shiro.WsService;
+import com.github.ibole.prototype.presentation.web.model.example.UserModel;
+import com.github.ibole.prototype.presentation.web.security.shiro.WsUserService;
 
 import com.google.common.base.Strings;
 
@@ -67,20 +67,20 @@ public class AuthenticatorController {
   private Logger logger = LoggerFactory.getLogger(getClass().getName());
 
   @Autowired
-  private WsService wsService;
+  private WsUserService wsService;
 
   @Autowired
   private TokenAuthenticator tokenMgr;
 
   /**
-   * User login with username and password provided.
+   * UserModel login with username and password provided.
    */
   @ResponseBody
   @RequestMapping(value = "/authenticate", method = RequestMethod.POST,
       consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginUser,
       HttpServletRequest request, HttpServletResponse response) {
-    User user = wsService.findWsUser(loginUser.getUsername(), loginUser.getPassword());
+    UserModel user = wsService.findWsUser(loginUser.getUsername(), loginUser.getPassword());
     LoginResponse result = new LoginResponse();
     if (user != null) {
       try {

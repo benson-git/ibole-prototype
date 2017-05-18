@@ -36,13 +36,16 @@ import org.apache.shiro.authc.AuthenticationToken;
 public class StatelessToken implements AuthenticationToken {
 
   private static final long serialVersionUID = -4328416906451280823L;
+  //user id, user's principal in Shiro.
   private Object principal;
-  private String token;
+  //access token, user's credential in Shiro.
+  private String credentials;
+  
   private String clientId;
 
-  public StatelessToken(String token, String loginId, String clientId) {
-    this.principal = loginId;
-    this.token = token;
+  public StatelessToken(String token, String userId, String clientId) {
+    this.principal = userId;
+    this.credentials = token;
     this.clientId = clientId;
   }
 
@@ -50,24 +53,29 @@ public class StatelessToken implements AuthenticationToken {
     this.principal = principal;
   }
 
-  public String getToken() {
-    return token;
+  public void setCredentials(String credentials) {
+    this.credentials = credentials;
   }
 
-  public void setToken(String clientDigest) {
-    this.token = clientDigest;
-  }
-
+  //Principals are attributes that identify a Subject, 
+  //such as a first name, a username, Social Security Number, etc.
   @Override
   public Object getPrincipal() {
     return principal;
   }
-
+  
+  //Credentials are secret values which normally are only known by the Subject it-self 
+  //and which are used to verify that the Subject is the actual real owner of that identity.
+  //Credentials can have multiple forms such as passwords, fingerprints or certificates.
   @Override
   public Object getCredentials() {
-    return token;
+    return credentials;
   }
 
+  public String getToken () {
+    return String.valueOf(this.credentials);
+  }
+  
   /**
    * @return the clientId
    */
@@ -84,7 +92,7 @@ public class StatelessToken implements AuthenticationToken {
 
   @Override
   public String toString() {
-    return "StatelessToken{" + "principal=" + principal + ", clientId=" + clientId +", token='"
-        + token + '\'' + '}';
+    return "StatelessToken{" + "principal=" + principal + ", clientId=" + clientId +", credentials='"
+        + credentials + '\'' + '}';
   }
 }

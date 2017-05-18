@@ -12,15 +12,19 @@
  * the License.
  */
 
-package com.github.ibole.prototype.presentation.web.security.shiro;
+package com.github.ibole.prototype.presentation.web.security.shiro.realm;
 
 import com.github.ibole.infrastructure.security.jwt.TokenAuthenticator;
 import com.github.ibole.infrastructure.security.jwt.TokenStatus;
+import com.github.ibole.prototype.presentation.web.model.example.UserModel;
+import com.github.ibole.prototype.presentation.web.security.exception.AuthenticationServiceException;
+import com.github.ibole.prototype.presentation.web.security.exception.HttpErrorStatus;
+import com.github.ibole.prototype.presentation.web.security.shiro.StatelessToken;
+import com.github.ibole.prototype.presentation.web.security.shiro.WsUserService;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -54,7 +58,7 @@ public class StatelessRealm extends AuthorizingRealm {
   private Logger logger = LoggerFactory.getLogger(StatelessRealm.class);
 
   @Autowired
-  private WsService wsService;
+  private WsUserService wsService;
 
   @Autowired
   private TokenAuthenticator tokenMgr;
@@ -65,28 +69,49 @@ public class StatelessRealm extends AuthorizingRealm {
     setAuthenticationTokenClass(StatelessToken.class);
   }
 
+  @Override
   protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
     String loginId = String.valueOf(principals.getPrimaryPrincipal());
     SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
     authorizationInfo.setRoles(wsService.findUserRoles(loginId));
     authorizationInfo.setStringPermissions(wsService.findUserPermissions(loginId));
-    logger.debug("Find authorization info from DB.");
+    logger.debug("doGetAuthorizationInfo from DB.");
     return authorizationInfo;
   }
 
+  @Override
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
       throws AuthenticationException {
     // Assert the StatelessToken, and if valid, look up the account data and return
     // an AuthenticationInfo instance representing that account.
     StatelessToken statelessToken = (StatelessToken) token;
+    HttpErrorStatus errorStatus = null;
+    UserModel user = wsService.findWsUserById(statelessToken.getPrincipal().toString());
+        
     TokenStatus status =
         tokenMgr.validAccessToken(statelessToken.getToken(), statelessToken.getClientId());
     
-    if(!status.isValidated()) {
-      throw new IncorrectCredentialsException("The provided token is expired or invalid.");
+    if(user == null) {
+      errorStatus = HttpErrorStatus.ACCOUNT_NOT_FOUND;
+    }
+    
+    if(user.isLocked()) {
+      errorStatus = HttpErrorStatus.ACCOUNT_LOCKED;
+    }
+    
+    if(status.isExpired()) {
+      errorStatus = HttpErrorStatus.ACCOUNT_EXPIRED;
+    }
+    
+    if(status.isInvalid()) {
+      errorStatus = HttpErrorStatus.ACCOUNT_INVALID;
     }
 
-    logger.debug("doGetAuthenticationInfo - "+status.getCode().value());
+    logger.debug("doGetAuthenticationInfo...");
+    
+    if(errorStatus != null) {
+      throw new AuthenticationServiceException(errorStatus);
+    }
 
     return new SimpleAuthenticationInfo(statelessToken.getPrincipal(), statelessToken.getToken(),
         getName() // realm name

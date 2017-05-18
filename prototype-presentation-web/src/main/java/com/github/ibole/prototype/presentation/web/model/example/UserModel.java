@@ -31,32 +31,31 @@ import javax.validation.constraints.NotNull;
  * @author bwang
  *
  */
-public class User {
+public class UserModel {
 
-  @NotNull(message="{id.not.empty}") 
-  private Long id;
+  private String userId;
   @NotNull(message="{username.not.empty}") 
   private String username;
-  
+  @NotNull(message="{password.not.empty}") 
   private String password;
   
   private String firstName;
   
   private String lastName;
   
-  private String digestkey;
+  private boolean locked;
 
-  public User() {}
+  public UserModel() {}
   
   /**
-   * @param id user id
+   * @param userId the user Id
    * @param username the user name
    * @param password the user password
    * @param firstName the first name
    * @param lastName the last name
    */
-  public User(Long id, String username, String password, String firstName, String lastName) {
-    this.id = id;
+  public UserModel(String userId, String username, String password, String firstName, String lastName) {
+    this.userId = userId;
     this.username = username;
     this.password = password;
     this.firstName = firstName;
@@ -67,15 +66,15 @@ public class User {
   /**
    * @return the id
    */
-  public Long getId() {
-    return id;
+  public String getUserId() {
+    return userId;
   }
 
   /**
    * @param id the id to set
    */
-  public void setId(Long id) {
-    this.id = id;
+  public void setUserId(String id) {
+    this.userId = id;
   }
 
   /**
@@ -128,17 +127,19 @@ public class User {
   public void setLastName(String lastName) {
     this.lastName = lastName;
   }
+
   /**
-   * @return the digestkey
+   * @return the locked
    */
-  public String getDigestkey() {
-    return digestkey;
+  public boolean isLocked() {
+    return locked;
   }
+
   /**
-   * @param digestkey the digestkey to set
+   * @param locked the locked to set
    */
-  public void setDigestkey(String digestkey) {
-    this.digestkey = digestkey;
+  public void setLocked(boolean locked) {
+    this.locked = locked;
   }
   
   

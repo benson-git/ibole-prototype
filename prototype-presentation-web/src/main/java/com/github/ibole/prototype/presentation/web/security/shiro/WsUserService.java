@@ -16,7 +16,7 @@
 
 package com.github.ibole.prototype.presentation.web.security.shiro;
 
-import com.github.ibole.prototype.presentation.web.model.example.User;
+import com.github.ibole.prototype.presentation.web.model.example.UserModel;
 
 import com.google.common.base.Strings;
 
@@ -33,10 +33,12 @@ import java.util.Set;
 
 
 /**
+ * TODO: Cache impl.
+ * 
  * @author bwang
  *
  */
-public class WsService {
+public class WsUserService {
 
   /**
    * @param employeeid
@@ -63,32 +65,34 @@ public class WsService {
   }
 
   /**
-   * @param loginId
-   * @return
+   * @param userId String
+   * @return the instance of UserModel 
    */
-  public User findWsUserById(String loginId) {
-    if (Strings.isNullOrEmpty(loginId)){
+  public UserModel findWsUserById(String userId) {
+    if (Strings.isNullOrEmpty(userId)){
       return null;
     }
-    User user = new User();
+    UserModel user = new UserModel();
+    user.setUserId(userId);
     user.setUsername("test");
     user.setFirstName("firstName");
     user.setLastName("lastName");
-    user.setDigestkey("password");
     return user;
   }
 
   /**
-   * @param loginId
-   * @return
+   * Find user by username and password, used for login.
+   * @param username String
+   * @param password String
+   * @return UserModel the instance of UserModel if found
    */
-  public User findWsUser(String loginId, String password) {
-    if (Strings.isNullOrEmpty(loginId) || Strings.isNullOrEmpty(password)){
+  public UserModel findWsUser(String username, String password) {
+    if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)){
       return null;
     }
-    User user = new User();
-    user.setUsername(loginId);
-    user.setDigestkey(password);
+    UserModel user = new UserModel();
+    user.setUserId("test");
+    user.setUsername(username);
     user.setFirstName("firstName");
     user.setLastName("lastName");
     return user;

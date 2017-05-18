@@ -17,6 +17,8 @@ package com.github.ibole.prototype.presentation.web.security.shiro;
 import com.github.ibole.infrastructure.security.jwt.JwtProvider;
 import com.github.ibole.infrastructure.security.jwt.TokenAuthenticator;
 import com.github.ibole.infrastructure.spi.cache.redis.RedisSimpleTempalte;
+import com.github.ibole.prototype.presentation.web.security.shiro.filter.StatelessAuthFilter;
+import com.github.ibole.prototype.presentation.web.security.shiro.realm.StatelessRealm;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
@@ -83,8 +85,8 @@ public class ShiroConfig {
   }
   
   @Bean
-  public WsService getWsService(){
-    return new WsService();
+  public WsUserService getWsService(){
+    return new WsUserService();
   }
   
   @Bean
@@ -112,7 +114,7 @@ public class ShiroConfig {
   
   @Bean 
   public DefaultWebSubjectFactory getSubjectFactory(){
-    DefaultWebSubjectFactory subjectFactory = new StatelessDefaultSubjectFactory();
+    DefaultWebSubjectFactory subjectFactory = new StatelessSubjectFactory();
     return subjectFactory;
   }
 
@@ -193,6 +195,7 @@ public class ShiroConfig {
     ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
     // 必须设置 SecurityManager
     shiroFilterFactoryBean.setSecurityManager(securityManager);
+    //Returns the URL to which users should be redirected if they are denied access to an underlying path or resource
     shiroFilterFactoryBean.setUnauthorizedUrl("/unauthorized");
     // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
     shiroFilterFactoryBean.setLoginUrl("/api/v1/auth/authenticate");

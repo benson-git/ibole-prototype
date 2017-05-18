@@ -16,7 +16,7 @@
 
 package com.github.ibole.prototype.presentation.web.controller.example;
 
-import com.github.ibole.prototype.presentation.web.model.example.User;
+import com.github.ibole.prototype.presentation.web.model.example.UserModel;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -65,7 +65,7 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/users")  
 public class UserRestController{
   
-  private static Map<Long, User> users = Collections.synchronizedMap(new HashMap<Long, User>());  
+  private static Map<String, UserModel> users = Collections.synchronizedMap(new HashMap<String, UserModel>());  
   
   @ApiOperation(value="问候", notes="不需要传入参数")
   @RequestMapping(value="/greet", method = RequestMethod.GET)
@@ -81,8 +81,8 @@ public class UserRestController{
   @ApiOperation(value = "获取用户列表", notes = "")  
   @RequestMapping(value = { "" }, method = RequestMethod.GET)  
   @ResponseBody
-  public List<User> getUserList() {  
-      List<User> r = new ArrayList<User>(users.values());  
+  public List<UserModel> getUserList() {  
+      List<UserModel> r = new ArrayList<UserModel>(users.values());  
       return r;  
   }  
   
@@ -91,7 +91,7 @@ public class UserRestController{
       @ApiImplicitParam(name = "id", value = "用户ID", paramType="path", required = true, dataType = "Long"),
   })
   @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)  
-  public User findById(@PathVariable("id") Long id) {  
+  public UserModel findById(@PathVariable("id") Long id) {  
       //return userService.findById(1L);  
     return users.get(id);
   } 
@@ -99,19 +99,19 @@ public class UserRestController{
 
 //  @RequestMapping(value = "/{id}")  
 //  @ResponseBody
-//  public User findById(@PathVariable("id") Long id) {  
+//  public UserModel findById(@PathVariable("id") Long id) {  
 //      //return userService.findById(1L);  
-//    return new User(1l, "a");
+//    return new UserModel(1l, "a");
 //  } 
   @ApiOperation(value="创建新用户", notes="根据User对象创建用户")
-  @ApiImplicitParam(name = "user", value = "用户详细模型user", required = true, dataType = "User")  
+  @ApiImplicitParam(name = "user", value = "用户详细模型user", required = true, dataType = "UserModel")  
   @SuppressWarnings({"rawtypes", "unchecked"})
   @RequestMapping(method = RequestMethod.POST)  
-  public ResponseEntity<User> save( @Valid @RequestBody User user, UriComponentsBuilder uriComponentsBuilder) {  
+  public ResponseEntity<UserModel> save( @Valid @RequestBody UserModel user, UriComponentsBuilder uriComponentsBuilder) {  
       //save user  
-      users.put(user.getId(), user);
+      users.put(user.getUserId(), user);
       MultiValueMap headers = new HttpHeaders();  
-      headers.set(HttpHeaders.LOCATION, uriComponentsBuilder.path("/api/v1//users/{id}").buildAndExpand(user.getId()).toUriString());  
+      headers.set(HttpHeaders.LOCATION, uriComponentsBuilder.path("/api/v1//users/{id}").buildAndExpand(user.getUserId()).toUriString());  
       return new ResponseEntity(user, headers, HttpStatus.CREATED);  
   }  
 
@@ -120,37 +120,37 @@ public class UserRestController{
 //  @RequestMapping(method = RequestMethod.POST)  
 //  @ResponseStatus(HttpStatus.CREATED)
 //  @ResponseBody
-//  public User save(@RequestBody User user, UriComponentsBuilder uriComponentsBuilder) {  
+//  public UserModel save(@RequestBody UserModel user, UriComponentsBuilder uriComponentsBuilder) {  
 //      //save user  
 //      user.setId(1L);   
 //      return user;  
 //  } 
   
   @ApiOperation(value = "更新用户详细信息", notes = "根据url的id来指定更新对象，并根据传过来的user信息来更新用户详细信息")  
-  @ApiImplicitParams({ @ApiImplicitParam(name = "id", value = "用户ID", paramType="path", required = true, dataType = "Long"),  
-          @ApiImplicitParam(name = "user", value = "用户详细实体user", required = true, dataType = "User") })   
+  @ApiImplicitParams({ @ApiImplicitParam(name = "id", value = "用户ID", paramType="path", required = true, dataType = "String"),  
+          @ApiImplicitParam(name = "user", value = "用户详细实体user", required = true, dataType = "UserModel") })   
   @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)   
-  public ResponseEntity<User> update(@PathVariable("id") Long id, @RequestBody User user) { 
+  public ResponseEntity<UserModel> update(@PathVariable("id") String id, @RequestBody UserModel user) { 
     //userService.updateUser(user);
-    User u = users.get(id);  
+    UserModel u = users.get(id);  
     u.setUsername(user.getUsername());  
     users.put(id, u); 
-    return new ResponseEntity<User>(u, HttpStatus.OK); 
+    return new ResponseEntity<UserModel>(u, HttpStatus.OK); 
   } 
 
 //@RequestMapping(value = "/{id}", method = RequestMethod.PUT)   
 //@ResponseStatus(HttpStatus.OK)
 //@ResponseBody
-//public User update(@RequestBody User user) {  
+//public UserModel update(@RequestBody UserModel user) {  
 //  //user = userService.updateUser(user);
 //  return user; 
 //} 
   @ApiOperation(value = "删除用户", notes = "根据url的id来指定删除对象")  
   @ApiImplicitParam(name = "id",  value = "用户ID", paramType="path", required = true, dataType = "Long")  
   @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)  
-  public ResponseEntity<User> delete(@PathVariable("id") Long id) {
+  public ResponseEntity<UserModel> delete(@PathVariable("id") Long id) {
     //userService.deleteUserById(id);
     users.remove(id); 
-    return new ResponseEntity<User>(HttpStatus.NO_CONTENT); 
+    return new ResponseEntity<UserModel>(HttpStatus.NO_CONTENT); 
   }  
 }

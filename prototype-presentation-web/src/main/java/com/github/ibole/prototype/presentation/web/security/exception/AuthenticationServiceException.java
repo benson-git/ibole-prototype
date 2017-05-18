@@ -31,6 +31,7 @@ package com.github.ibole.prototype.presentation.web.security.exception;
  */
 public class AuthenticationServiceException extends RuntimeException {
 
+  private HttpErrorStatus errorStatus;
   /**
    * 
    */
@@ -40,15 +41,17 @@ public class AuthenticationServiceException extends RuntimeException {
     super();
   }
 
-  public AuthenticationServiceException(final String message, final Throwable cause) {
-    super(message, cause);
+  public AuthenticationServiceException(final HttpErrorStatus errorStatus, final Throwable cause) {
+    super(errorStatus.getCode()+"", cause);
+    this.errorStatus = errorStatus;
   }
 
-  public AuthenticationServiceException(final String message) {
-    super(message);
+  public AuthenticationServiceException(final HttpErrorStatus errorStatus) {
+    super(errorStatus.getCode()+"");
+    this.errorStatus = errorStatus;
   }
-
-  public AuthenticationServiceException(final Throwable cause) {
-    super(cause);
+  
+  public HttpErrorStatus getErrorStatus() {
+    return errorStatus;
   }
 }

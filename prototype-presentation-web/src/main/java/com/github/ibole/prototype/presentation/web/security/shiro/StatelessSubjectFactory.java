@@ -33,11 +33,11 @@ import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
  * @author bwang
  *
  */
-public class StatelessDefaultSubjectFactory extends DefaultWebSubjectFactory {
+public class StatelessSubjectFactory extends DefaultWebSubjectFactory {
   
   @Override
   public Subject createSubject(SubjectContext context) {
-      //不创建session
+      //disable session creation.
       context.setSessionCreationEnabled(false);
       return super.createSubject(context);
   }

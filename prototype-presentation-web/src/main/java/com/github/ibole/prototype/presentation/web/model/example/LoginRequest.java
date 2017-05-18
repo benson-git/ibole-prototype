@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
 
 
 /**
- * User login information, only use for login case.
+ * UserModel login information, only use for login case.
  * 
  * @author bwang
  *

@@ -18,12 +18,20 @@ import com.alibaba.fastjson.JSONArray;
 import com.github.ibole.infrastructure.common.utils.Constants;
 import com.github.ibole.infrastructure.common.utils.JsonUtils;
 import com.github.ibole.prototype.presentation.web.security.exception.AuthenticationServiceException;
+import com.github.ibole.prototype.presentation.web.security.exception.HttpErrorStatus;
 
 import com.google.common.base.Strings;
 
+import org.apache.shiro.web.util.WebUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /*********************************************************************************************
  * .
@@ -60,15 +68,21 @@ public class WsWebUtil {
 
   public static String getTokenFromHeader(HttpServletRequest request) {
     String authentications = request.getHeader(Constants.HEADER_AUTH_NAME);
-    if (Strings.isNullOrEmpty(authentications)) {
-      throw new AuthenticationServiceException("Authorization header cannot be blank!");
-    }
-
-    if (authentications.length() < Constants.HEADER_AUTH_PREFIX.length()) {
-      throw new AuthenticationServiceException("Invalid authorization header size.");
+    if (Strings.isNullOrEmpty(authentications)
+        || authentications.length() < Constants.HEADER_AUTH_PREFIX.length()) {
+      throw new AuthenticationServiceException(HttpErrorStatus.ACCOUNT_INVALID);
     }
 
     return authentications.substring(Constants.HEADER_AUTH_PREFIX.length(),
         authentications.length());
+  }
+  
+  public static void customServletReponse(ServletResponse response, HttpStatus httpStatus,
+      HttpErrorStatus customErrorStatus) throws IOException {
+    HttpServletResponse httpResponse = WebUtils.toHttp(response);
+    httpResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+    httpResponse.setStatus(httpStatus.value());
+    httpResponse.setHeader(httpStatus.value() + "", httpStatus.getReasonPhrase());
+    httpResponse.getWriter().write(customErrorStatus.toJson());
   }
 }
