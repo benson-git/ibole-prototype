@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.ibole.prototype.presentation.web.security.shiro;
+package com.github.ibole.prototype.presentation.web.security.shiro.filter;
 
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authz.AuthorizationFilter;

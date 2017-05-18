@@ -102,14 +102,6 @@ public class AuthenticatorController {
       return new ResponseEntity<LoginResponse>(result, HttpStatus.UNAUTHORIZED);
     }
   }
-  
-  private <T> ResponseEntity<T> returnResponse(T body, HttpStatus status) {
-    
-    ResponseEntity<T> entityResponse = ResponseEntity.accepted().body(body);
-    entityResponse.status(status);
-    
-    return entityResponse;
-  }
  
   /**
    * 

@@ -59,6 +59,22 @@ import javax.servlet.http.HttpServletRequest;
 
 
 /**
+ * <pre>
+ * 
+ *  When you call Subject.login(AuthenticationToken), the token makes its 
+ *  way to the SecurityManager. The SecurityManager calls a wrapped  delegate Authenticator.
+ *  This Authenticator uses an AuthenticationStrategy to interact with one or more Realms to
+ *  support PAM (Pluggable Authentication Module)-like behavior. 
+ *  
+ *  Typically each realm is consulted by the Strategy to see if it 
+ *  supports the submitted token, and if so, asks the realm to 
+ *  'getAuthenticationInfo'.
+ *  
+ *  High level picture: 
+ *  AuthenticationToken -- (submitted to) --> Subject.login --> 
+ *   SecurityManager --> Authenticator --> AuthenticationStrategy --> (1 or more Realms).
+ * </pre>
+ * 
  * @author bwang
  *
  */
@@ -100,7 +116,6 @@ public class StatelessAuthFilter extends AuthenticatingFilter {
       if (reequestWithToken(request, response)) {
         String jwtToken = WsWebUtil.getTokenFromHeader(WebUtils.toHttp(request));
         if (Strings.isNullOrEmpty(jwtToken)) {
-          onLoginFail(response, HttpStatus.UNAUTHORIZED, HttpErrorStatus.ACCOUNT_INVALID);
           loggedIn = false;
         } else {
           jwtObject = JoseUtils.claimsOfTokenWithoutValidation(jwtToken);
@@ -124,8 +139,12 @@ public class StatelessAuthFilter extends AuthenticatingFilter {
       loggedIn = false;
       logger.error("Authenticated failed for '{}' from '{}' - ", jwtObject.getLoginId(),
           jwtObject.getClientId(), ex.getMessage());
+    }
+    
+    if(!loggedIn) {
       onLoginFail(response, HttpStatus.UNAUTHORIZED, HttpErrorStatus.ACCOUNT_INVALID);
     }
+    
     return loggedIn;
   }
 

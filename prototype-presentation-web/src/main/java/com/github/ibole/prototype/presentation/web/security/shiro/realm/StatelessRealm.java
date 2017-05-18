@@ -71,10 +71,10 @@ public class StatelessRealm extends AuthorizingRealm {
 
   @Override
   protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-    String loginId = String.valueOf(principals.getPrimaryPrincipal());
+    String userId = String.valueOf(principals.getPrimaryPrincipal());
     SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-    authorizationInfo.setRoles(wsService.findUserRoles(loginId));
-    authorizationInfo.setStringPermissions(wsService.findUserPermissions(loginId));
+    authorizationInfo.setRoles(wsService.findUserRoles(userId));
+    authorizationInfo.setStringPermissions(wsService.findUserPermissions(userId));
     logger.debug("doGetAuthorizationInfo from DB.");
     return authorizationInfo;
   }

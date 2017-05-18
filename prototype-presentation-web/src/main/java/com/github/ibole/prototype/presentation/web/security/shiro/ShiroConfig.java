@@ -17,8 +17,12 @@ package com.github.ibole.prototype.presentation.web.security.shiro;
 import com.github.ibole.infrastructure.security.jwt.JwtProvider;
 import com.github.ibole.infrastructure.security.jwt.TokenAuthenticator;
 import com.github.ibole.infrastructure.spi.cache.redis.RedisSimpleTempalte;
+import com.github.ibole.prototype.presentation.web.security.shiro.filter.RolesAuthorizationFilter;
 import com.github.ibole.prototype.presentation.web.security.shiro.filter.StatelessAuthFilter;
+import com.github.ibole.prototype.presentation.web.security.shiro.realm.FormRealm;
 import com.github.ibole.prototype.presentation.web.security.shiro.realm.StatelessRealm;
+
+import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
@@ -40,6 +44,7 @@ import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -75,7 +80,7 @@ public class ShiroConfig {
    */
   
   @Bean
-  public RedisSimpleTempalte setRedisSimpleTempalte() {
+  public RedisSimpleTempalte getRedisSimpleTempalte() {
     return new RedisSimpleTempalte("localhost", 6379, "ibole2017");
   }
   
@@ -105,11 +110,18 @@ public class ShiroConfig {
   }
 
   @Bean
-  public Realm getShiroRealm() {
-    StatelessRealm realm = new StatelessRealm();
-    realm.setCachingEnabled(false);
+  public Realm getStatelessRealm() {  
+    StatelessRealm statelessRealm = new StatelessRealm();
+    statelessRealm.setCachingEnabled(false);
     // realm.setCacheManager(getEhCacheManager());
-    return realm;
+    return statelessRealm;
+  }
+  
+  @Bean
+  public Realm getFormRealm() {
+    FormRealm formRealm = new FormRealm();
+    formRealm.setCachingEnabled(false);
+    return formRealm;
   }
   
   @Bean 
@@ -131,14 +143,17 @@ public class ShiroConfig {
   }
 
   @Bean
-  public DefaultWebSecurityManager setWebSecurityManager(Realm realm, DefaultWebSubjectFactory subjectFactory,
+  public DefaultWebSecurityManager setWebSecurityManager(DefaultWebSubjectFactory subjectFactory,
       SessionManager sessionManager) {
+    Collection<Realm> realms = Lists.newArrayList();
+    realms.add(getFormRealm());
+    realms.add(getStatelessRealm());
     DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
     DefaultSessionStorageEvaluator sessionStorageEvaluator = new DefaultSessionStorageEvaluator();
     sessionStorageEvaluator.setSessionStorageEnabled(false);
     subjectDAO.setSessionStorageEvaluator(sessionStorageEvaluator);
     DefaultWebSecurityManager dwsm = new DefaultWebSecurityManager();
-    dwsm.setRealm(realm);
+    dwsm.setRealms(realms);
     dwsm.setSubjectFactory(subjectFactory);
     dwsm.setSubjectDAO(subjectDAO);
     //dwsm.setCacheManager(getEhCacheManager());

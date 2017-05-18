@@ -57,10 +57,10 @@ public class WsUserService {
    */
   public Set<String> findUserPermissions(String loginId) {
     Set<String> permissions = new HashSet<String>();
-    permissions.add("user.read");
-    permissions.add("user.create");
-    permissions.add("user.update");
-    permissions.add("user.delete");
+    permissions.add("user:read");
+    permissions.add("user:create");
+    permissions.add("user:update");
+    permissions.add("user:delete");
     return permissions;
   }
 

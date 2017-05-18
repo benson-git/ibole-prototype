@@ -118,7 +118,7 @@ public final class HttpErrorStatus {
     /**
      * The token is locked.
      */
-    ACCOUNT_LOCKED(36, "account.locked");
+    ACCOUNT_LOCKED(37, "account.locked");
 
 
     private final int value;
