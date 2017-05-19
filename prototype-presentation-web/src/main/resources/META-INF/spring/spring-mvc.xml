@@ -77,6 +77,6 @@
     <mvc:annotation-driven validator="validator"/>
    
     <bean class="com.github.ibole.prototype.presentation.web.config.RestApiConfig"/>
-    <bean class="com.github.ibole.infrastructure.web.spring.shiro.ShiroConfig"/>
+    <bean class="com.github.ibole.infrastructure.web.security.spring.shiro.config.ShiroConfig"/>
     
 </beans>

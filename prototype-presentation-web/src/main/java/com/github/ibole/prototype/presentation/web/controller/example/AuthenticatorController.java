@@ -18,12 +18,12 @@ import com.github.ibole.infrastructure.security.jwt.JwtObject;
 import com.github.ibole.infrastructure.security.jwt.TokenAuthenticator;
 import com.github.ibole.infrastructure.security.jwt.TokenHandlingException;
 import com.github.ibole.infrastructure.security.jwt.TokenStatus;
-import com.github.ibole.infrastructure.web.model.LoginRequest;
-import com.github.ibole.infrastructure.web.model.LoginResponse;
-import com.github.ibole.infrastructure.web.model.TokenRenewRequest;
-import com.github.ibole.infrastructure.web.model.TokenRenewResponse;
-import com.github.ibole.infrastructure.web.model.UserModel;
-import com.github.ibole.infrastructure.web.spring.shiro.WsUserService;
+import com.github.ibole.infrastructure.web.security.model.LoginRequest;
+import com.github.ibole.infrastructure.web.security.model.LoginResponse;
+import com.github.ibole.infrastructure.web.security.model.TokenRenewRequest;
+import com.github.ibole.infrastructure.web.security.model.TokenRenewResponse;
+import com.github.ibole.infrastructure.web.security.model.UserModel;
+import com.github.ibole.infrastructure.web.security.spring.shiro.WsUserService;
 
 import com.google.common.base.Strings;
 

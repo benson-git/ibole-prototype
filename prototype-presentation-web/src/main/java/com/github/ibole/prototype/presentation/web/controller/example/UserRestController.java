@@ -16,7 +16,7 @@
 
 package com.github.ibole.prototype.presentation.web.controller.example;
 
-import com.github.ibole.infrastructure.web.model.UserModel;
+import com.github.ibole.infrastructure.web.security.model.UserModel;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
