@@ -76,7 +76,7 @@ public class AuthenticatorController {
    * UserModel login with username and password provided.
    */
   @ResponseBody
-  @RequestMapping(value = "/authenticate", method = RequestMethod.POST,
+  @RequestMapping(value = "/login", method = RequestMethod.POST,
       consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginUser,
       HttpServletRequest request, HttpServletResponse response) {
