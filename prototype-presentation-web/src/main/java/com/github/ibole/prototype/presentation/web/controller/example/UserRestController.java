@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -63,6 +64,7 @@ import javax.validation.Valid;
 @RestController
 @Component("greeterAction")
 @RequestMapping("/api/v1/users")  
+@Api(value="User Manager", tags="User Manager1")
 public class UserRestController{
   
   private static Map<String, UserModel> users = Collections.synchronizedMap(new HashMap<String, UserModel>());  
